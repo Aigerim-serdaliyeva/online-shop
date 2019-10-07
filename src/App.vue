@@ -1,28 +1,41 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app" class="container" >
+    <app-filter @change-filter="filterCategoryId = $event"></app-filter>
+    <app-list :products="filteredProducts"></app-list>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import Filter from './components/Filter'
+import List from './components/List'
+import {products} from './store.js'
 export default {
   name: 'app',
+  data() {
+    return {
+      products,
+      filterCategoryId: ''
+    }
+  },
+  computed: {
+    filteredProducts() {
+      if(!this.filterCategoryId) {
+        return this.products
+      } 
+      return this.products.filter((product) => {
+        return product.categoryId === this.filterCategoryId
+      })
+    }
+  },
   components: {
-    HelloWorld
+    appFilter: Filter,
+    appList: List
   }
 }
 </script>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  
 }
 </style>
