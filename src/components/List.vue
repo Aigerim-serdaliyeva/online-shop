@@ -4,7 +4,7 @@
       <li 
         v-for="product in products" 
         :key="product.id">
-        {{ product.name }}
+        {{ `${product.name} (${product.price} тг)` }}
         </li>
     </ul>
   </div>

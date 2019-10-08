@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="container" >
-    <app-filter @change-filter="filterCategoryId = $event" @searchFilter="filterCategoryName = $event"></app-filter>
+    <app-filter @change-filter="updateFilter"></app-filter>
     <app-list :products="filteredProducts"></app-list>
   </div>
 </template>
@@ -13,28 +13,46 @@ export default {
   name: 'app',
   data() {
     return {
-      products,
+      products,      
       filterCategoryId: '',
-      filterCategoryName: ''
+      filterProductName: '',
+      filterPriceFrom: '',
+      filterPriceTo: ''
     }
   },
   computed: {
     filteredProducts() {
-      // if(!this.filterCategoryId) {
-      //   return this.products
-      // } 
-      // return this.products.filter((product) => {
-      //   return product.categoryId === this.filterCategoryId
-      // })
+      let products = this.products;
+      if(this.filterCategoryId) {
+        products = products.filter((product) => product.categoryId === this.filterCategoryId);
+      } 
+      
+      if(this.filterProductName) {
+        products = products.filter((product) => product.name.toLowerCase().includes(this.filterProductName.toLowerCase()))
+      }
+      
+      if(this.filterPriceFrom) {
+        products = products.filter((product) => product.price >= this.filterPriceFrom)
+      }
 
-      return this.products.filter((product) => {
-        return product.name.toLowerCase().includes(this.filterCategoryName.toLowerCase())
-      })
+      if(this.filterPriceTo) {
+        products = products.filter((product) => product.price <= this.filterPriceTo)
+      }
+
+      return products;
     }
   },
   components: {
     appFilter: Filter,
     appList: List
+  },
+  methods:{
+    updateFilter(filter) {
+      this.filterCategoryId = filter.categoryId;
+      this.filterProductName = filter.searchProductName;
+      this.filterPriceFrom = filter.priceFrom;
+      this.filterPriceTo = filter.priceTo;
+    }
   }
 }
 </script>
